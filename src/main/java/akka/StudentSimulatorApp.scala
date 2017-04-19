@@ -21,6 +21,6 @@ object StudentSimulatorApp extends App {
   Thread.sleep (2000) 
 
   //Shut down the ActorSystem.
-  actorSystem.shutdown()
+  actorSystem.terminate()
   
 }

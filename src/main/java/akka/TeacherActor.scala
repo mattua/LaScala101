@@ -5,8 +5,9 @@ import scala.util.Random
 import akka.actor.Actor
 import akka.TeacherProtocol.QuoteRequest
 import akka.TeacherProtocol.QuoteResponse
+import akka.actor.ActorLogging
 
-class TeacherActor extends Actor {
+class TeacherActor extends Actor with ActorLogging  {
   
   val quotes = List(
     "Moderation is for cowards",
@@ -14,6 +15,8 @@ class TeacherActor extends Actor {
     "The trouble is you think you have time",
     "You never gonna know if you never even try")
 
+  
+   
   def receive = {
 
     
@@ -22,7 +25,8 @@ class TeacherActor extends Actor {
       //Get a random Quote from the list and construct a response
       val quoteResponse=QuoteResponse(quotes(Random.nextInt(quotes.size)))
 
-      println (quoteResponse)
+      log.info(quoteResponse.toString())
+      //println (quoteResponse)
 	
     
     }
