@@ -17,6 +17,8 @@ object StudentSimulatorApp extends App {
   //send a message to the Teacher Actor
   teacherActorRef!QuoteRequest
 
+  print("Hello")
+  
   //Let's wait for a couple of seconds before we shut down the system
   Thread.sleep (2000) 
 
