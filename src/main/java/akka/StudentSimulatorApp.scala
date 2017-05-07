@@ -23,4 +23,13 @@ object StudentSimulatorApp extends App {
   //Shut down the ActorSystem.
   actorSystem.terminate()
   
+  def sayHello(){
+    
+  }
+  
+  def sayHello1(){
+    
+  }
+  
+  
 }
