@@ -1,4 +1,4 @@
-package akka
+package general
 
 object HelloWorld {
 
