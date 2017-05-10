@@ -28,7 +28,7 @@ object TypedActorTut2 extends App {
   // return Typed Actor extension
   val extension = TypedActor(actorSystem)
 
-  val teacherActorRef = actorSystem.actorOf(Props[TeacherActor])
+  
   println(2)
  
  
@@ -94,7 +94,10 @@ class SquarerImpl(val name: String) extends Squarer {
   
   def squareDontCare(i: Int): Unit = i * i // doesnt return anything
   
-  def square(i: Int): Future[Int] = Future.successful(i * i)
+  def square(i: Int): Future[Int] = {
+    
+    Future.successful(i * i)
+  }
   
   def squareNowPlease(i: Int): Option[Int] = Some(i * i)
   
