@@ -80,6 +80,12 @@ trait TypedActorFactory {
   def typedActorOf[R <: AnyRef, T <: R](props: TypedProps[T], name: String): R = {
     val proxyVar = new AtomVar[R] //Chicken'n'egg-resolver
     val c = props.creator //Cache this to avoid closing over the Props
+ 
+    val uj=props.actorProps.args // this works
+    
+   
+    //MUST BE A DIFFERENT VERSION OF PROPS
+    
     val ap = props.actorProps.withCreator(new akka.actor.TypedActor.TypedActor[R, T](proxyVar, c()))
     typedActor.createActorRefProxy(props, proxyVar, actorFactory.actorOf(ap, name))
   }
