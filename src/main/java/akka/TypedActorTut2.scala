@@ -2,14 +2,15 @@ package akka
 
 
 
-import scala.concurrent.Future
-import akka.actor.TypedProps
 import java.util.concurrent.TimeUnit
-import akka.actor.ActorSystem
+
+import scala.concurrent.Future
 import scala.concurrent.duration.FiniteDuration
+
+import akka.actor.ActorSystem
 import akka.actor.TypedActor
+import akka.actor.TypedProps
 import akka.util.Timeout
-import akka.actor.Props
 
 
 

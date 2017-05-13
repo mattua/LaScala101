@@ -1,19 +1,22 @@
 package akka
 
-import scala.concurrent.Future
-import akka.actor.TypedProps
 import java.util.concurrent.TimeUnit
-import akka.actor.ActorSystem
-import scala.concurrent.duration.FiniteDuration
-import akka.actor.TypedActor
-import akka.util.Timeout
-import akka.actor.Props
-import akka.actor.Actor
-import com.typesafe.config.ConfigFactory
-import akka.pattern.ask
-import scala.concurrent.duration.Duration
+
 import scala.concurrent.Await
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.duration.FiniteDuration
+
+import com.typesafe.config.ConfigFactory
+
+import akka.actor.Actor
 import akka.actor.ActorRef
+import akka.actor.ActorSystem
+import akka.actor.Props
+import akka.actor.TypedActor
+import akka.actor.TypedProps
+import akka.pattern.ask
+import akka.util.Timeout
 
 //http://doc.akka.io/docs/akka/current/scala/typed-actors.html
 object MembersService extends App {
@@ -36,7 +39,9 @@ object MembersService extends App {
   val mySquarer3: MySquarer =
     TypedActor(system).typedActorOf(TypedProps[MySquarerImpl](), "remote-worker3")
 
-  println(Await.result(mySquarer3.square(5), Duration.apply("5 seconds")).asInstanceOf[Int])
+  println("got my actor")
+    
+  println(Await.result(mySquarer3.square(5), Duration.apply("10 seconds")).asInstanceOf[Int])
 
   Thread.sleep(90000)
 
