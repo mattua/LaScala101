@@ -61,3 +61,11 @@ REQ_RECEIVED   0
 SERVICE_EXCEPTION   0
 ASK_TIMEOUT   0
 
+
+
+Status asof 14thMay2017
+-------------------------
+Can run my local version of TypedActor and mimic all the issues for logging except the timeouts
+
+
+

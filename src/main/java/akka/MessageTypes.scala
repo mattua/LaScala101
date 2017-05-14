@@ -1,5 +1,7 @@
 package akka
 
+import akka.actor.TypedActor.MethodCall
+
 object TeacherProtocol {
 
   // Get next ID
@@ -33,5 +35,22 @@ object TeacherProtocol {
     val id: Long = RespIDGenerator.next
 
   }
+  
+  case class MethodRequestEnvelope(methodCall:MethodCall){
+    
+    val id: Long = RespIDGenerator.next
+    
+  }
+  
+  case class MethodResponseEnvelope(methodCall:MethodCall){
+    
+    val id: Long = RespIDGenerator.next
+    
+  }
+  
+  
+  
+  
+  
 
 }

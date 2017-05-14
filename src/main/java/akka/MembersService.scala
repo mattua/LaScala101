@@ -41,7 +41,20 @@ object MembersService extends App {
 
   println("got my actor")
     
-  println(Await.result(mySquarer3.square(5), Duration.apply("10 seconds")).asInstanceOf[Int])
+  for (i <- 1 until 20){
+    try { 
+    println(Await.result(mySquarer3.square(i), Duration.apply("15 seconds")).asInstanceOf[Int])
+    } catch {
+      case e: Throwable => 
+        
+       println("              something went wrong with "+i)
+       // println(e)
+    }
+    
+    
+  }
+  
+
 
   Thread.sleep(90000)
 
@@ -125,10 +138,25 @@ class MySquarerImpl(val name: String) extends MySquarer {
 
   def this() = this("default")
 
-  def squareDontCare(i: Int): Unit = i * i // doesnt return anything
+  def squareDontCare(i: Int): Unit = {
+    
+    println("running square dont care")
+    i * i // doesnt return anything
+  }
 
   def square(i: Int): Future[Int] = {
 
+    if (Math.random()<0.4){
+      throw new Exception("Oops something happened")
+    }
+    
+    if (Math.random()<0.5){
+      
+      Thread.sleep(4000)
+      
+    }
+    
+    println("                 running square future")
     Future.successful(i * i)
   }
 
