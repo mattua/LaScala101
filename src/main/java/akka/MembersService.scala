@@ -41,6 +41,10 @@ object MembersService extends App {
 
   println("got my actor")
     
+  
+  println("Option  : "+ mySquarer3.squareNowPlease(8).get)
+   
+  
   for (i <- 1 until 20){
     try { 
     println(Await.result(mySquarer3.square(i), Duration.apply("15 seconds")).asInstanceOf[Int])

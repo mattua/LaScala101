@@ -351,9 +351,9 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
               //sender() ! Status.Failure(e)
               // there seems to be a problem putting the exception in side the status
               // and communicating it back to the actor
-              val t:Throwable = e
+              val t: Throwable = e
               sender() ! Status.Failure
-              //sender() ! Status.Failure(t)
+            //sender() ! Status.Failure(t)
             // For now don't throw the Exception on the server side
             //throw e
           }
@@ -473,7 +473,7 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
     @throws(classOf[Throwable])
     def invoke(proxy: AnyRef, method: Method, args: Array[AnyRef]): AnyRef =
       {
-       
+
         method.getName match {
           case "toString" ⇒ actor.toString
           case "equals" ⇒ (args.length == 1 && (proxy eq args(0)) || actor == extension.getActorRefFor(args(0))).asInstanceOf[AnyRef] //Force boxing of the boolean
@@ -487,37 +487,41 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
                 actor ! m; null //Null return value
               case m if m.returnsFuture ⇒
 
-                
                 val envelope: MethodRequestEnvelope = MethodRequestEnvelope(m)
 
                 println("CLIENT.REQUEST.MESSAGE_ID." + envelope.id);
-
-             
-                  ask(actor, envelope)(timeout) map {
-
-                   case Status.Failure =>
-                      println("CLIENT.SERVER_EXCEPTION.MESSAGE_ID." + envelope.id)
-
-                    case Status.Failure(e:Throwable) =>
-                  
-                      println("CLIENT.SERVER_EXCEPTION.MESSAGE_ID." + envelope.id)
-
-                    case NullResponse ⇒
-
-                      println("CLIENT.NULL_RESPONSE.RECEIVED.MESSAGE_ID." + envelope.id);
-                      null
-
-                    case result ⇒
-                      println("CLIENT.SUCCESS_RESPONSE.RECEIVED.MESSAGE_ID." + envelope.id + " value= " + result);
-                      result
-                  }
+                println("timeout is "+timeout)
                 
+                ask(actor, envelope)(timeout) map {
+
+                  case Status.Failure =>
+                    println("CLIENT.SERVER_EXCEPTION.MESSAGE_ID." + envelope.id)
+
+                  case Status.Failure(e: Throwable) =>
+
+                    println("CLIENT.SERVER_EXCEPTION.MESSAGE_ID." + envelope.id)
+
+                  case NullResponse ⇒
+
+                    println("CLIENT.NULL_RESPONSE.RECEIVED.MESSAGE_ID." + envelope.id);
+                    null
+
+                  case result ⇒
+                    println("CLIENT.SUCCESS_RESPONSE.RECEIVED.MESSAGE_ID." + envelope.id + " value= " + result);
+                    result
+                }
 
               case m if m.returnsJOption || m.returnsOption ⇒
 
                 println("asking the actor")
                 val f = ask(actor, m)(timeout)
-                (try { Await.ready(f, timeout.duration).value } catch { case _: TimeoutException ⇒ None }) match {
+                (
+                    try { 
+                      
+                      println("calling option returning function with the timeout on the actor "+timeout)
+                      Await.ready(f, timeout.duration).value 
+                      } 
+                    catch { case _: TimeoutException ⇒ None }) match {
                   case None | Some(Success(NullResponse)) | Some(Failure(_: AskTimeoutException)) ⇒
                     if (m.returnsJOption) JOption.none[Any] else None
                   case Some(t: Try[_]) ⇒
