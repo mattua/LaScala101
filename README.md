@@ -3,6 +3,10 @@
 
 [http://rerun.me/2014/09/11/introducing-actors-akka-notes-part-1/](http://rerun.me/2014/09/11/introducing-actors-akka-notes-part-1/)
 
+
+Eclipse>Import>Git>Projects from Git> Existing Eclipse project
+
+
 Eclipse right click - add scala nature
 
 
