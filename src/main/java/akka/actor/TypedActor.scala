@@ -314,7 +314,9 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
 
         val m: MethodCall = env.methodCall
 
-        println("SERVER.RECEIVED.MESSAGE_ID." + env.id)
+        val received=System.currentTimeMillis()
+        
+        println("MESSAGE_ID:"+env.id+": SERVER.RECEIVED_REQUEST")
 
         if (m.isOneWay) {
           //println("One way")
@@ -330,24 +332,24 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
                 f onComplete {
                   case Success(null) =>
 
-                    println("SERVER.RETURNED_NULL1.MESSAGE_ID." + env.id + " telling null response to sender actor")
+                    println("MESSAGE_ID:"+env.id+": SERVER.RETURNED_NULL1.MESSAGE_ID - telling null response to sender actor")
                     s ! NullResponse
 
                   case Success(result) =>
-                    println("SERVER.RETURNED_SUCCESS_RESULT.MESSAGE_ID." + env.id + " returning response to sender actor: " + result)
+                    println("MESSAGE_ID:"+env.id+": SERVER.GENERATE_SUCCESS_RESULT - returning response to sender actor: " + result+ " took "+ ((System.currentTimeMillis() - received)/1000d)    +" seconds to process on the server")
                     s ! result
                   case Failure(f) =>
-                    println("SERVER.RETURNED_FAILURE_RESULT.MESSAGE_ID." + env.id + " telling Status.Failure to calling actor")
+                    println("MESSAGE_ID:"+env.id+": SERVER.RETURNED_FAILURE_RESULT - telling Status.Failure to calling actor")
                     s ! Status.Failure(f)
                 }
               case null =>
-                println("SERVER.RETURNED_NULL2.MESSAGE_ID." + env.id + " telling null response to sender actor")
+                println("MESSAGE_ID:"+env.id+": SERVER.RETURNED_NULL2 - telling null response to sender actor")
                 s ! NullResponse
               case result => s ! result
             }
           } catch {
             case NonFatal(e) =>
-              println("SERVER.EXCEPTION.MESSAGE_ID." + env.id + " telling Status.Failure to calling actor ")
+              println("MESSAGE_ID:"+env.id+": SERVER.EXCEPTION - telling Status.Failure to calling actor ")
               //sender() ! Status.Failure(e)
               // there seems to be a problem putting the exception in side the status
               // and communicating it back to the actor
@@ -361,8 +363,7 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
       }
       case m: MethodCall => withContext {
 
-        println("We rock")
-
+     
         if (m.isOneWay) {
           println("One way")
           m(me)
@@ -489,25 +490,27 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
 
                 val envelope: MethodRequestEnvelope = MethodRequestEnvelope(m)
 
-                println("CLIENT.REQUEST.MESSAGE_ID." + envelope.id);
+                println("MESSAGE_ID:"+envelope.id+": CLIENT.REQUEST_INITIATED");
                 println("timeout is "+timeout)
+                
+                val t1=System.currentTimeMillis()
                 
                 ask(actor, envelope)(timeout) map {
 
                   case Status.Failure =>
-                    println("CLIENT.SERVER_EXCEPTION.MESSAGE_ID." + envelope.id)
+                    println("MESSAGE_ID:"+envelope.id+": CLIENT.SERVER_EXCEPTION_REPORTED")
 
                   case Status.Failure(e: Throwable) =>
 
-                    println("CLIENT.SERVER_EXCEPTION.MESSAGE_ID." + envelope.id)
+                    println("MESSAGE_ID:"+envelope.id+": CLIENT.SERVER_EXCEPTION")
 
                   case NullResponse =>
 
-                    println("CLIENT.NULL_RESPONSE.RECEIVED.MESSAGE_ID." + envelope.id);
+                    println("MESSAGE_ID:"+envelope.id+": CLIENT.NULL_RESPONSE.RECEIVED");
                     null
 
                   case result =>
-                    println("CLIENT.SUCCESS_RESPONSE.RECEIVED.MESSAGE_ID." + envelope.id + " value= " + result);
+                    println("MESSAGE_ID:"+envelope.id+": CLIENT.SUCCESS_RESPONSE.RECEIVED -value= " + result + " round trip took "+ ((System.currentTimeMillis()-t1)/1000d) +" seconds");
                     result
                 }
 

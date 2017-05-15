@@ -153,6 +153,8 @@ class MySquarerImpl(val name: String) extends MySquarer {
     if (Math.random()<0.4){
       throw new Exception("Oops something happened")
     }
+        
+    Thread.sleep(Math.round(Math.random()*1000))
     
     if (Math.random()<0.5){
       
@@ -164,7 +166,10 @@ class MySquarerImpl(val name: String) extends MySquarer {
     Future.successful(i * i)
   }
 
-  def squareNowPlease(i: Int): Option[Int] = Some(i * i)
+  def squareNowPlease(i: Int): Option[Int] = {
+    Thread.sleep(Math.round(Math.random()*2000))
+    Some(i * i)
+  }
 
   def squareNow(i: Int): Int = i * i
 
