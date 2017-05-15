@@ -17,6 +17,8 @@ import akka.actor.TypedActor
 import akka.actor.TypedProps
 import akka.pattern.ask
 import akka.util.Timeout
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 //http://doc.akka.io/docs/akka/current/scala/typed-actors.html
 object MembersService extends App {
@@ -25,6 +27,29 @@ object MembersService extends App {
 
   print("Hello")
 
+  // This will run once
+  val f = Future {
+      println("running my future")
+      Thread.sleep(3000)
+      println("finished my future")
+  }
+  // this will run once the future completes
+  f.onComplete{
+      case Success(value) => println("Got the callback, inside the oncomplete")
+      case Failure(e) => e.printStackTrace
+    
+  }
+  // this will run if the future succeeds
+  f.onSuccess{
+     case result => println("Inside the onSucess method")
+    
+  }
+  
+  
+  print("My future didn't block")
+  
+  Thread.sleep(12000)
+  
   val system = ActorSystem("MembersService", ConfigFactory.load.getConfig("MembersService"))
 
   val worker1 = system.actorOf(Props[Worker], "remote-worker1")
