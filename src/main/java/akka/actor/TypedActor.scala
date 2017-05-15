@@ -349,15 +349,15 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
             }
           } catch {
             case NonFatal(e) =>
-              println("MESSAGE_ID:"+env.id+": SERVER.EXCEPTION - telling Status.Failure to calling actor ")
-              //sender() ! Status.Failure(e)
+              println("MESSAGE_ID:"+env.id+": SERVER.EXCEPTION - telling Status.Failure to calling actor " )
+              e.printStackTrace()
               // there seems to be a problem putting the exception in side the status
               // and communicating it back to the actor
               val t: Throwable = e
               sender() ! Status.Failure
             //sender() ! Status.Failure(t)
             // For now don't throw the Exception on the server side
-            //throw e
+              //throw e
           }
         }
       }
@@ -486,6 +486,7 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
             MethodCall(method, args) match {
               case m if m.isOneWay =>
                 actor ! m; null //Null return value
+              
               case m if m.returnsFuture =>
 
                 val envelope: MethodRequestEnvelope = MethodRequestEnvelope(m)
@@ -497,15 +498,12 @@ object TypedActor extends ExtensionId[TypedActorExtension] with ExtensionIdProvi
                 
                 ask(actor, envelope)(timeout) map {
 
+                  
                   case Status.Failure =>
                     println("MESSAGE_ID:"+envelope.id+": CLIENT.SERVER_EXCEPTION_REPORTED")
-
-                  case Status.Failure(e: Throwable) =>
-
-                    println("MESSAGE_ID:"+envelope.id+": CLIENT.SERVER_EXCEPTION")
+									
 
                   case NullResponse =>
-
                     println("MESSAGE_ID:"+envelope.id+": CLIENT.NULL_RESPONSE.RECEIVED");
                     null
 

@@ -27,6 +27,7 @@ object MembersService extends App {
 
   print("Hello")
 
+  /*
   // This will run once
   val f = Future {
       println("running my future")
@@ -48,7 +49,8 @@ object MembersService extends App {
   
   print("My future didn't block")
   
-  Thread.sleep(12000)
+  //Thread.sleep(12000)
+  */
   
   val system = ActorSystem("MembersService", ConfigFactory.load.getConfig("MembersService"))
 
@@ -61,14 +63,18 @@ object MembersService extends App {
   worker1 ! Work("START worker 1")
   worker2 ! Work("START worker 2")
 
+  
+  
   val mySquarer3: MySquarer =
-    TypedActor(system).typedActorOf(TypedProps[MySquarerImpl](), "remote-worker3")
+    TypedActor(system).typedActorOf(TypedProps[MySquarerImpl]().withTimeout(new Timeout(new FiniteDuration(4, TimeUnit.SECONDS))), "remote-worker3")
 
   println("got my actor")
-    
   
-  println("Option  : "+ mySquarer3.squareNowPlease(8).get)
-   
+  /*
+   You can't go down the route of creating a new actor with the timeout as an instance variable for every call
+  val timeout=1
+  println("Option  : "+ TypedActor(system).typedActorOf(TypedProps[MySquarerImpl]().withTimeout(new Timeout(new FiniteDuration(1, TimeUnit.SECONDS))), "remote-worker3").squareNowPlease(8).get)
+   */
   
   for (i <- 1 until 20){
     try { 
