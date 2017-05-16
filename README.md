@@ -21,4 +21,9 @@ Status asof 14thMay2017
 Can run my local version of TypedActor and mimic all the issues for logging except the timeouts
 
 
+versions
+--------------
+requires java 8 and scala 2.11 (not 2.12) since the
+akka dependencies are tied to 2.11
+
 
