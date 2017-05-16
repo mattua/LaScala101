@@ -23,7 +23,7 @@ import scala.util.{Failure, Success}
 //http://doc.akka.io/docs/akka/current/scala/typed-actors.html
 object MembersService extends App {
 
-  // loads from application.conf
+  // loads from application.conf//
 
   print("Hello")
 
